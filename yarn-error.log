@@ -1,0 +1,48 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn add cookies
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  1.2.1
+
+Node version: 
+  8.8.1
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "blog",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "body-parser": "^1.18.2",
+      "cookie": "^0.3.1",
+      "express": "^4.16.2",
+      "markdown": "^0.5.0",
+      "mongoose": "^4.13.0",
+      "swig": "^1.4.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: https://registry.yarnpkg.com/body-parser: ETIMEDOUT
+      at Timeout._onTimeout (/usr/local/lib/node_modules/yarn/lib/cli.js:123675:19)
+      at ontimeout (timers.js:471:11)
+      at tryOnTimeout (timers.js:306:5)
+      at Timer.listOnTimeout (timers.js:266:5)
