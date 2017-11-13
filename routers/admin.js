@@ -227,7 +227,7 @@ router.get('/content',(req,res) => {
     page3=Math.min(page3,pages3)
     page3=Math.max(page3,1)
     let skip3=(page3-1)*limit3;
-    Content.find().sort({_id:-1}).limit(limit3).skip(skip3).populate(['category','user']).then((contents) => {
+    Content.find().sort({_id:-1}).limit(limit3).skip(skip3).populate(['category','user']).sort({addTime:-1}).then((contents) => {
       res.render('admin/content_index',{
         userInfo:req.userInfo,
         contents,
