@@ -227,7 +227,7 @@ router.get('/content',(req,res) => {
     page3=Math.min(page3,pages3)
     page3=Math.max(page3,1)
     let skip3=(page3-1)*limit3;
-    Content.find().sort({_id:-1}).limit(limit3).skip(skip3).populate('category').then((contents) => {
+    Content.find().sort({_id:-1}).limit(limit3).skip(skip3).populate(['category','user']).then((contents) => {
       res.render('admin/content_index',{
         userInfo:req.userInfo,
         contents,
@@ -268,7 +268,8 @@ router.post('/content/add',(req,res) => {
   }
   //保存到数据库
   new Content({
-    ...req.body
+    ...req.body,
+    user:req.userInfo._id.toString()
   }).save().then((rs) => {
     res.render('admin/success',{
       userInfo:req.userInfo,
