@@ -15,7 +15,7 @@
   {% for content in contents %}
   <tr>
     <td>{{content._id.toString()}}</td>
-    <td>{{content.category.id.toString()}}</td>
+    <td>{{content.category.name}}</td>
     <td>{{content.title}}</td>
     <td>
       <a href="/admin/content/edit?id={{content._id.toString()}}">修改</a> |
