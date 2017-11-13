@@ -3,6 +3,7 @@ var router=express.Router();
 
 var User=require('../models/User');
 var Category=require('../models/Category');
+var Content=require('../models/Content');
 
 router.use((req,res,next) => {
   if(!req.userInfo.isAdmin){//如果当前用户是非管理员
@@ -212,6 +213,69 @@ router.get('/category/delete', (req,res) => {
       userInfo:req.userInfo,
       message:'删除成功',
       url:'/admin/category'
+    });
+  })
+})
+//内容首页
+router.get('/content',(req,res) => {
+  let page3=Number(req.query.page) || 1;
+  console.log(page3);
+  let limit3=10;
+
+  let pages3=0
+  //获取数据库里的所有记录
+  Content.count().then((count3) => {
+    pages3=Math.ceil(count3/limit3);
+    page3=Math.min(page3,pages3)
+    page3=Math.max(page3,1)
+    let skip3=(page3-1)*limit3;
+    Content.find().sort({_id:-1}).limit(limit3).skip(skip3).then((contents) => {
+      res.render('admin/content_index',{
+        userInfo:req.userInfo,
+        contents,
+        page:page3,
+        count:count3,
+        pages:page3,
+        limit:limit3,
+        type:'content'
+      })
+    });
+  });
+})
+//内容添加
+router.get('/content/add',(req,res) => {
+  Category.find().sort({_id:-1}).then((categories) => {
+    res.render('admin/content_add',{
+      userInfo:req.userInfo,
+      categories
+    })
+  })
+
+})
+//内容保存
+router.post('/content/add',(req,res) => {
+  if(!req.body.category){
+    res.render('admin/error',{
+      userInfo:req.userInfo,
+      message:'内容分类不能为空',
+    });
+    return;
+  }
+  if(!req.body.title){
+    res.render('admin/error',{
+      userInfo:req.userInfo,
+      message:'内容标题不能为空',
+    });
+    return;
+  }
+  //保存到数据库
+  new Content({
+    ...req.body
+  }).save().then((rs) => {
+    res.render('admin/success',{
+      userInfo:req.userInfo,
+      message:'内容保存成功',
+      url:'/admin/content'
     });
   })
 })
