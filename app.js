@@ -45,7 +45,6 @@ app.use((req,res,next) => {
   }else{
     next();
   }
-  console.log(typeof req.cookies.get('userInfo'));//string
 
 })
 

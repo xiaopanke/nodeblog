@@ -34,7 +34,6 @@ router.get('/user',(req,res) => {
   let pages=0
   //获取数据库里的所有记录
   User.count().then((count) => {
-    console.log(count);
     //总页数
     pages=Math.ceil(count/limit);
     //取值不能超过pages
@@ -49,7 +48,8 @@ router.get('/user',(req,res) => {
         page,
         count,
         pages,
-        limit
+        limit,
+        type:'user'
       })
     });
   });
@@ -57,9 +57,32 @@ router.get('/user',(req,res) => {
 
 /*分类首页*/
 router.get('/category',(req,res) => {
-  res.render('admin/category_index',{
-    userInfo:req.userInfo
-  })
+  let page2=Number(req.query.page) || 1;
+  console.log(page2);
+  let limit2=10;
+
+  let pages2=0
+  //获取数据库里的所有记录
+  Category.count().then((count2) => {
+    //总页数
+    pages2=Math.ceil(count2/limit2);
+    //取值不能超过pages
+    page2=Math.min(page2,pages2)
+    //取值不能小于1
+    page2=Math.max(page2,1)
+    let skip2=(page2-1)*limit2;
+    Category.find().limit(limit2).skip(skip2).then((categories) => {
+      res.render('admin/category_index',{
+        userInfo:req.userInfo,
+        categories,
+        page:page2,
+        count:count2,
+        pages:page2,
+        limit:limit2,
+        type:'category'
+      })
+    });
+  });
 })
 
 /*分类的添加*/
@@ -102,4 +125,95 @@ router.post('/category/add',(req,res) => {
     });
   })
 })
+
+//分类修改
+router.get('/category/edit',(req,res) => {
+  //获取要修改的分类的信息，并且用静音的形式展现出来
+  var id=req.query.id || '';
+  Category.findOne({
+    _id:id
+  }).then((category) => {
+    if(!category){
+      res.render('admin/error',{
+        userInfo:req.userInfo,
+        message:'分类信息不存在'
+      });
+      return Promise.reject();
+    }else{
+      res.render('admin/category_edit',{
+        userInfo:req.userInfo,
+        category
+      });
+    }
+  })
+})
+//分类的修改保存
+router.post('/category/edit',(req,res) => {
+  //获取要个性的分类的信息，并且用静音的形式展现出来
+  var id=req.query.id || '';
+  //获取post提交过来的名称
+  var name=req.body.name || '';
+  Category.findOne({
+    _id:id
+  }).then((category) => {
+    if(!category){
+      res.render('admin/error',{
+        userInfo:req.userInfo,
+        message:'分类信息不存在'
+      });
+      return Promise.reject();
+    }else{
+      //当用户没有做任何的修改提交的时候
+      if(name == category.name){
+        res.render('admin/success',{
+          userInfo:req.userInfo,
+          message:'修改成功',
+          url:'/admin/category'
+        });
+        return Promise.reject();
+      }else{
+          //要修改的分类名称是否已经在数据库中存在
+        return   Category.findOne({
+            _id:{$ne:id},
+            name
+          })
+      }
+
+    }
+  }).then((sameCategory) => {
+      if(sameCategory){
+        res.render('admin/error',{
+          userInfo:req.userInfo,
+          message:'数据库中已经存在同名分类'
+        });
+        return Promise.reject();
+      }else{
+        return Category.update({
+          _id:id
+        },{
+          name
+        })
+      }
+  }).then(() => {
+    res.render('admin/success',{
+      userInfo:req.userInfo,
+      message:'修改成功',
+      url:'/admin/category'
+    });
+  })
+})
+//分类删除
+router.get('/category/delete', (req,res) => {
+  var id=req.query.id || '';
+  Category.remove({
+    _id:id
+  }).then(() => {
+    res.render('admin/success',{
+      userInfo:req.userInfo,
+      message:'删除成功',
+      url:'/admin/category'
+    });
+  })
+})
+
 module.exports=router;
