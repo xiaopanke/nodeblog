@@ -7,7 +7,7 @@
         作者：<span class="colInfo">{{content.user.username}}</span> -
         时间：<span class="colInfo">{{content.addTime|date('Y年m月d日 H:i:s', -8*60)}}</span> -
         阅读：<span class="colInfo">{{content.views}}</span> -
-        评论：<span class="colInfo">content.comments.length</span>
+        评论：<span class="colInfo">{{content.comments.length}}</span>
     </p>
     <dfn>
         {{content.content}}
@@ -17,7 +17,6 @@
 <div class="listBox message">
     <h3 class="textLeft"><strong>评论</strong> <span class="em">一共有 <em id="messageCount">0</em> 条评论</span></h3>
     {% if userInfo._id %}
-    <p class="textLeft">zmouse</p>
     <p class="textLeft clear">
         <textarea id="messageContent"></textarea>
         <input type="hidden" id="contentId" value="{{content.id}}">
@@ -33,11 +32,11 @@
     <div class="pager">
         <ul class="clear">
             <li class="previous">
-                <a href="">上一页</a>
+                <a href="javascript:;">上一页</a>
             </li>
             <li></li>
             <li class="next">
-                <a href="">下一页</a>
+                <a href="javascript:;">下一页</a>
             </li>
         </ul>
     </div>

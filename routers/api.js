@@ -106,6 +106,16 @@ router.get('/user/logout',(req,res) => {
   responseDate.message='退出成功';
   res.json(responseDate)
 })
+//获取指定文件的评论
+router.get('/comment',(req,res) => {
+  var contentId=req.query.contentid || '';
+  Content.findOne({
+    _id:contentId
+  }).then((content) => {
+      responseDate.data=content.comments;
+      res.json(responseDate)
+  })
+})
 //评论提交
 router.post('/comment/post',(req,res) => {
   //文章的id
