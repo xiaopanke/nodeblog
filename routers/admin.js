@@ -71,7 +71,7 @@ router.get('/category',(req,res) => {
     //取值不能小于1
     page2=Math.max(page2,1)
     let skip2=(page2-1)*limit2;
-    Category.find().limit(limit2).skip(skip2).then((categories) => {
+    Category.find().sort({_id:-1}).limit(limit2).skip(skip2).then((categories) => {
       res.render('admin/category_index',{
         userInfo:req.userInfo,
         categories,
