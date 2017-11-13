@@ -1,6 +1,7 @@
 var express=require('express');
 var router=express.Router();
 let User=require('../models/User')
+let Content=require('../models/Content')
 
 //统一返回格式
 var responseDate;
@@ -104,6 +105,27 @@ router.get('/user/logout',(req,res) => {
   req.cookies.set('userInfo',null)
   responseDate.message='退出成功';
   res.json(responseDate)
+})
+//评论提交
+router.post('/comment/post',(req,res) => {
+  //文章的id
+  var contentId=req.body.contentid || '';
+  var postData={
+    username:req.userInfo.username,
+    postTime:new Date(),
+    content:req.body.content,
+  }
+  //查询当前这片内容的信息
+  Content.findOne({
+    _id:contentId
+  }).then((content) => {
+    content.comments.push(postData)
+    return content.save();
+  }).then((newContent) => {
+    responseDate.message='评论成功';
+    responseDate.data=newContent
+    res.json(responseDate)
+  })
 })
 
 module.exports=router;
